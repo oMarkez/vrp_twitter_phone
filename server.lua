@@ -16,27 +16,25 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ]]
 
+local Tunnel = module("vrp", "lib/Tunnel")
 local Proxy = module("vrp", "lib/Proxy")
 
 vRP = Proxy.getInterface("vRP")
+vRPclient = Tunnel.getInterface("vRP","vRP_atm")
 
 local ch_sendtweet = {function(player,choice)
     local user_id = vRP.getUserId({player})
 
 	vRP.prompt({player,"Twitter Message:","",function(player,msg)
-        if msg ~= nil and msg ~= "" then
-            vRP.getUserIdentity({user_id, function (identity)
-                local firstname = identity.firstname
-                local lastname = identity.name
-                name = firstname .." ".. lastname
+        	if msg and msg ~= "" then
+			vRP.getUserIdentity({user_id, function(identity)
 
-                TriggerClientEvent('chatMessage', -1, "^4TWITTER | ^5@".."" .. name.."", { 10, 205, 245 }, msg)
-            end})
+                		TriggerClientEvent('chatMessage', -1, "^4TWITTER | ^5@"..""..identity.firstname.." "..identity.name.."", { 10, 205, 245 }, msg)
+            		end})
 		else
-		    vRPclient.notify(player,{"~r~You have to write a message."})
+			vRPclient.notify(player,{"~r~You have to write a message."})
 		end
 	end})
-	vRP.openMenu({player, menu})
 end,"Send a Twitter message."}
 
 vRP.registerMenuBuilder({"phone", function(add)
